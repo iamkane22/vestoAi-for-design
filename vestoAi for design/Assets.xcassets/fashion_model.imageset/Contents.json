@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "GENTLEMAN STYLE.jpeg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "GENTLEMAN STYLE 1.jpeg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "GENTLEMAN STYLE 2.jpeg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
