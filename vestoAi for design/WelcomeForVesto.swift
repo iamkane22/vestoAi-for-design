@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct FinalEliteWelcomeView: View {
+struct WelcomeForVesto: View {
     var body: some View {
         ZStack {
             // 1. OBSIDIAN DEPTH: Sonsuzluq Hissi
@@ -66,18 +66,7 @@ struct FinalEliteWelcomeView: View {
                 .padding(.bottom, 45)
                 
                 // --- C. PAGINATOR: Qızıl Üzük
-                HStack(spacing: 14) {
-                    ZStack {
-                        Circle()
-                            .stroke(Color.vestoGold.opacity(0.8), lineWidth: 0.4)
-                            .frame(width: 12, height: 12)
-                        Circle()
-                            .fill(Color.vestoGold)
-                            .frame(width: 4, height: 4)
-                    }
-                    Circle().fill(Color.white.opacity(0.12)).frame(width: 4, height: 4)
-                    Circle().fill(Color.white.opacity(0.12)).frame(width: 4, height: 4)
-                }
+               
 
                 Spacer()
                 
@@ -93,5 +82,5 @@ struct FinalEliteWelcomeView: View {
 }
 
 #Preview {
-    FinalEliteWelcomeView()
+    WelcomeForVesto()
 }
