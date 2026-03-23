@@ -1,96 +1,76 @@
 import SwiftUI
 
-struct VerdictViewMain: View {
+struct VerdictViewMain:  View {
     let capturedImage: UIImage?
     let analysis: VestoAnalysis
     
-    @State private var isPremium: Bool = true // Dinamik status
+    @State private var isPremium: Bool = false // Münsiflər üçün kilidli saxlayırıq
     @State private var scoreAnimation: Double = 0
-    @State private var showSubscription = false
-    @State private var isSaved = false
     
-    let vestoGold = Color(red: 0.83, green: 0.69, blue: 0.22)
+    let vestoGold = Color(red: 0.83, green: 0.69, blue: 0.22) // #D4B138 - Elit Qızıl
     
     var body: some View {
         ZStack {
-            // ARXA FON (Şəkil + Blur Overlay)
+            // 1. ARXA FON: "Liquid Depth" & Vignette
+            Color.black.edgesIgnoringSafeArea(.all)
+            
             if let img = capturedImage {
                 Image(uiImage: img)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .edgesIgnoringSafeArea(.all)
-                    .blur(radius: isPremium ? 0 : 10) // Premium deyilsə bir az gizli saxla
-                    .overlay(Color.black.opacity(0.6))
+                    .blur(radius: 10)
+                    .opacity(0.6)
+                    .overlay(
+                        // Vignette effekti üçün tünd gradient
+                        RadialGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
+                                       center: .center, startRadius: 100, endRadius: 500)
+                    )
             }
             
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 30) {
-                    // HEADER
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("STYLE VERDICT")
-                                .font(.system(size: 14, weight: .ultraLight))
-                                .tracking(10)
-                                .foregroundColor(vestoGold)
-                            Text("MARCH 2026 EDITION")
-                                .font(.system(size: 9, weight: .thin))
-                                .foregroundColor(.white.opacity(0.6))
-                        }
-                        Spacer()
-                        if isPremium {
-                            Image(systemName: "crown.fill").foregroundColor(vestoGold)
-                        }
+                VStack(spacing: 35) {
+                    // HEADER: Minimalist Elegance
+                    VStack(spacing: 5) {
+                        Text("STYLE VERDICT")
+                            .font(.system(size: 14, weight: .ultraLight))
+                            .tracking(10)
+                            .foregroundColor(vestoGold)
+                        Text("MARCH 2026 EDITION")
+                            .font(.system(size: 8, weight: .thin))
+                            .foregroundColor(.white.opacity(0.4))
                     }
-                    .padding(.horizontal, 30)
-                    .padding(.top, 20)
+                    .padding(.top, 40)
                     
-                    // SCORE RING
+                    // 2. SCORE RING: "The Halo Glow"
                     scoreRingSection
                     
-                    // AI VERDICT QUOTE
+                    // 3. AI VERDICT: Serif Typography
                     Text("\"\(analysis.verdict)\"")
-                        .font(.system(size: 18, weight: .light, design: .serif))
+                        .font(.system(size: 19, weight: .light, design: .serif))
                         .italic()
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
                         .padding(.horizontal, 40)
+                        .lineSpacing(4)
                     
-                    // ANALİZ DETALLARI (PREMIUM MƏNTİQİ İLƏ)
+                    // 4. DATA ROWS: Minimalist Icons & Elite Lock
                     VStack(spacing: 0) {
-                        DetailRow(title: "AESTHETIC VIBE", value: analysis.vibe, isLocked: false)
-                        DetailRow(title: "COLOR HARMONY", value: analysis.colorHarmony, isLocked: false)
-                        
-                        // Kilidli Hissələr
-                        DetailRow(title: "OCCASION MATCH", value: analysis.occasion, isLocked: !isPremium)
-                        DetailRow(title: "UPGRADE THE LOOK", value: analysis.upgrade, isLocked: !isPremium)
-                        DetailRow(title: "VAULT SYNERGY", value: "Matches \(analysis.vaultMatchCount) Items", isLocked: !isPremium)
+                        DetailRow(icon: "tshirt", title: "AESTHETIC VIBE", value: analysis.vibe, isLocked: false)
+                        DetailRow(icon: "paintpalette", title: "COLOR HARMONY", value: analysis.colorHarmony, isLocked: false)
+                        DetailRow(icon: "calendar", title: "OCCASION MATCH", value: analysis.occasion, isLocked: !isPremium)
+                        DetailRow(icon: "clock", title: "UPGRADE THE LOOK", value: analysis.upgrade, isLocked: !isPremium)
+                        DetailRow(icon: "briefcase", title: "VAULT SYNERGY", value: "Matches 3 Items", isLocked: !isPremium)
                     }
-                    .background(Color.white.opacity(0.03))
+                    .background(Color.white.opacity(0.04))
                     .cornerRadius(20)
                     .padding(.horizontal, 25)
                     
-                    // SAVE TO VAULT BUTTON (Premium funksiya)
-                    if isPremium {
-                        Button(action: { isSaved.toggle() }) {
-                            HStack {
-                                Image(systemName: isSaved ? "checkmark.seal.fill" : "plus.square.on.square")
-                                Text(isSaved ? "SAVED TO VAULT" : "ADD TO DIGITAL WARDROBE")
-                            }
-                            .font(.system(size: 12, weight: .bold)).tracking(1)
-                            .foregroundColor(isSaved ? .green : vestoGold)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 15)
-                            .background(vestoGold.opacity(0.1))
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(vestoGold.opacity(0.3)))
-                        }
-                        .padding(.horizontal, 40)
-                    }
-                    
-                    // ACTION BUTTONS
+                    // 5. ACTION BUTTONS: Elite Space
                     VStack(spacing: 15) {
                         if !isPremium {
-                            Button(action: { showSubscription = true }) {
+                            Button(action: { isPremium.toggle() }) {
                                 Text("UNLOCK ELITE INSIGHTS")
                                     .font(.system(size: 13, weight: .bold)).tracking(2)
                                     .foregroundColor(.black)
@@ -101,7 +81,7 @@ struct VerdictViewMain: View {
                             }
                         }
                         
-                        Button(action: { /* Share */ }) {
+                        Button(action: { /* Share Card Logic */ }) {
                             Text("SHARE STYLE CARD")
                                 .font(.system(size: 12, weight: .bold)).tracking(2)
                                 .foregroundColor(.white)
@@ -115,11 +95,8 @@ struct VerdictViewMain: View {
                 }
             }
         }
-        .sheet(isPresented: $showSubscription) {
-            Text("Subscription View") // Bura sənin Paywall ekranın gələcək
-        }
         .onAppear {
-            withAnimation(.easeInOut(duration: 2.0)) {
+            withAnimation(.easeInOut(duration: 2.5)) {
                 scoreAnimation = Double(analysis.score) / 100.0
             }
         }
@@ -127,63 +104,74 @@ struct VerdictViewMain: View {
     
     var scoreRingSection: some View {
         ZStack {
+            // Arxa dairə (zəif iz)
             Circle()
-                .stroke(Color.white.opacity(0.05), lineWidth: 8)
-                .frame(width: 170, height: 170)
+                .stroke(Color.white.opacity(0.05), lineWidth: 6)
+                .frame(width: 160, height: 160)
+            
+            // Halo Glow effektli əsas dairə
             Circle()
                 .trim(from: 0, to: scoreAnimation)
-                .stroke(vestoGold, style: StrokeStyle(lineWidth: 8, lineCap: .round))
-                .frame(width: 170, height: 170)
+                .stroke(
+                    LinearGradient(colors: [vestoGold, .white.opacity(0.8), vestoGold], startPoint: .topLeading, endPoint: .bottomTrailing),
+                    style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                )
+                .frame(width: 160, height: 160)
                 .rotationEffect(.degrees(-90))
-                .shadow(color: vestoGold.opacity(0.3), radius: 15)
+                .shadow(color: vestoGold.opacity(0.5), radius: 15)
             
             VStack(spacing: -5) {
                 Text("\(Int(scoreAnimation * 100))")
-                    .font(.system(size: 55, weight: .thin, design: .serif))
+                    .font(.system(size: 64, weight: .ultraLight, design: .serif))
                 Text("MATCH SCORE")
-                    .font(.system(size: 10, weight: .light)).tracking(3).opacity(0.6)
+                    .font(.system(size: 10, weight: .light)).tracking(4).opacity(0.5)
             }
             .foregroundColor(.white)
         }
     }
 }
 
-// DETAL SƏTRİ (Locked məntiqi bərpa olundu)
+// Minimalist Sətir Dizaynı
 struct DetailRow: View {
+    let icon: String
     let title: String
     let value: String
     let isLocked: Bool
     let vestoGold = Color(red: 0.83, green: 0.69, blue: 0.22)
     
     var body: some View {
-        HStack {
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .font(.system(size: 12))
+                .foregroundColor(vestoGold.opacity(0.7))
+            
             Text(title)
                 .font(.system(size: 10, weight: .regular)).tracking(1)
                 .foregroundColor(.white.opacity(0.4))
+            
             Spacer()
             
             if isLocked {
                 HStack(spacing: 4) {
-                    Image(systemName: "lock.fill").font(.system(size: 9))
-                    Text("ELITE").font(.system(size: 10, weight: .bold))
+                    Image(systemName: "lock.fill").font(.system(size: 8))
+                    Text("ELITE").font(.system(size: 9, weight: .bold))
                 }
                 .foregroundColor(vestoGold)
                 .padding(.vertical, 4).padding(.horizontal, 8)
-                .background(vestoGold.opacity(0.1)).cornerRadius(4)
+                .background(vestoGold.opacity(0.12)).cornerRadius(4)
             } else {
                 Text(value)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 13, weight: .light))
                     .foregroundColor(.white)
             }
         }
-        .padding(.vertical, 18).padding(.horizontal, 20)
+        .padding(.vertical, 20).padding(.horizontal, 20)
         .overlay(Divider().background(Color.white.opacity(0.05)), alignment: .bottom)
     }
 }
-// MARK: - PREVIEW DÜZƏLİŞİ
-// MARK: - PREVIEW DÜZƏLİŞİ
+
+// XƏTASIZ PREVIEW
 #Preview {
-    // 1. Öncə saxta bir analiz obyekti yaradırıq (Modeldəki bütün sahələr olmalıdır)
     let sampleAnalysis = VestoAnalysis(
         score: 94,
         vibe: "Quiet Luxury",
@@ -194,10 +182,10 @@ struct DetailRow: View {
         vaultMatchCount: 3
     )
     
-    // 2. 'return' sözünü sildik!
-    // SwiftUI avtomatik olaraq sondakı View-nu render edəcək.
+    // Artıq 'return' yazmağa ehtiyac yoxdur, birbaşa View-nu çağır:
     VerdictViewMain(
-        capturedImage: UIImage(named: "test_model"),
+        capturedImage: UIImage(named: "test_model"), // Test üçün nil qoyduq
         analysis: sampleAnalysis
     )
+    .preferredColorScheme(.dark)
 }

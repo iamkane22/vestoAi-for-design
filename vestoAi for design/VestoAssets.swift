@@ -13,6 +13,8 @@ extension Color {
     static let vestoGold = Color(hex: "#D4A017")
     static let vestoBlack = Color.black
     static let vestoGray = Color(white: 0.6)
+    static let vestoGrey = Color(red: 26/255, green: 26/255, blue: 26/255)
+    static let vestoTextGrey = Color(white: 0.6)
     
     // Bu funksiya YALNIZ burada qalmalıdır!
     init(hex: String) {
