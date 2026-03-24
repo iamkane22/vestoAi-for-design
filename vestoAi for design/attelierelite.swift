@@ -1,19 +1,16 @@
-//
 //  attelierelite.swift
 //  vestoAi for design
 //
-//  Created by Kenan on 24.03.26.
+//  Created by Kanan on 24.03.26.
 //
 
 import SwiftUI
 
-// 1. Atelier Səviyyəli Premium Rənglər
 extension Color {
     static let atelierBlack = Color(red: 3/255, green: 3/255, blue: 3/255)
     static let atelierGold = Color(red: 230/255, green: 190/255, blue: 100/255)
     static let platinumWhite = Color(white: 0.95)
     
-    // Maye Qızıl Effekti üçün Qradyan
     static let liquidGold = LinearGradient(
         gradient: Gradient(colors: [Color(hex: "E6BE64"), Color(hex: "FFF9E3"), Color(hex: "B8860B")]),
         startPoint: .topLeading,
@@ -26,14 +23,13 @@ struct VestoAtelierView: View {
         ZStack {
             Color.atelierBlack.ignoresSafeArea()
             
-            // Arxa fonda incə, hərəkətli "Mesh Gradient" (Atelier Hissiyatı)
             Circle()
                 .fill(Color.atelierGold.opacity(0.03))
                 .blur(radius: 100)
                 .offset(x: -100, y: -200)
             
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 40) {
+                VStack(spacing: 35) {
                     
                     // MARK: - THE ATELIER HEADER
                     HStack(spacing: 20) {
@@ -41,7 +37,7 @@ struct VestoAtelierView: View {
                             Circle()
                                 .stroke(Color.liquidGold, lineWidth: 0.5)
                                 .frame(width: 80, height: 80)
-                            Text("JV") // - Julian Vane (Kanan)
+                            Text("JV")
                                 .font(.system(size: 24, weight: .light, design: .serif))
                                 .foregroundColor(.platinumWhite)
                         }
@@ -61,27 +57,24 @@ struct VestoAtelierView: View {
                             }
                             .foregroundColor(.atelierGold)
                         }
-                        
                         Spacer()
-                        
                         Image(systemName: "line.3.horizontal.decrease")
                             .font(.system(size: 18, weight: .light))
                             .foregroundColor(.white.opacity(0.6))
                     }
                     .padding(.horizontal, 24)
-                    .padding(.top, 30)
+                    .padding(.top, 20)
                     
-                    // MARK: - THE LIQUID GAUGE (Top 1% Stats)
+                    // MARK: - THE LIQUID GAUGE
                     ZStack {
                         Circle()
                             .stroke(Color.white.opacity(0.03), lineWidth: 1)
-                            .frame(width: 220, height: 220)
+                            .frame(width: 210, height: 210)
                         
-                        // "Liquid" Progress Ring
                         Circle()
                             .trim(from: 0, to: 0.94)
-                            .stroke(Color.liquidGold, style: StrokeStyle(lineWidth: 1, lineCap: .round))
-                            .frame(width: 220, height: 220)
+                            .stroke(Color.liquidGold, style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
+                            .frame(width: 210, height: 210)
                             .rotationEffect(.degrees(-90))
                         
                         VStack(spacing: -2) {
@@ -96,27 +89,41 @@ struct VestoAtelierView: View {
                         }
                     }
                     
-                    // MARK: - THE ATELIER VAULT (Unlimited)
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text("ATELIER SERVICES")
-                            .font(.system(size: 10, weight: .bold))
-                            .tracking(3)
-                            .foregroundColor(.white.opacity(0.3))
-                            .padding(.horizontal, 24)
+                    // MARK: - THE ATELIER GRID (Unified with Pro/Free)
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                            
-                            AtelierCard(icon: "sparkles", title: "PRIORITY SCANS", value: "UNLIMITED")
-                            AtelierCard(icon: "brain.headset", title: "VIP CONCIERGE", value: "ACTIVE")
-                            AtelierCard(icon: "chart.xyaxis.line", title: "TREND DATA", value: "LIVE")
-                            AtelierCard(icon: "infinity", title: "DIGITAL VAULT", value: "NO LIMIT")
+                        AtelierVaultCard(icon: "paintpalette.fill", title: "MATERIAL DNA", status: "LIVE") {
+                            HStack(spacing: 6) {
+                                Circle().fill(Color.black).frame(width: 14, height: 14)
+                                Circle().fill(Color.gray).frame(width: 14, height: 14)
+                                Circle().fill(Color.atelierGold).frame(width: 14, height: 14)
+                                Circle().fill(Color.white).frame(width: 14, height: 14)
+                            }
                         }
-                        .padding(.horizontal, 24)
+                        
+                        AtelierVaultCard(icon: "tshirt.fill", title: "SIGNATURE", status: "VERIFIED") {
+                            Text("OLD MONEY LUXE")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        
+                        AtelierVaultCard(icon: "bolt.shield.fill", title: "SYNERGY ENGINE", status: "DEEP MATCH") {
+                            Text("REAL-TIME")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(Color.green.opacity(0.9))
+                        }
+                        
+                        AtelierVaultCard(icon: "infinity", title: "DIGITAL VAULT", status: "ACTIVE") {
+                            Text("UNLIMITED")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(.white)
+                        }
                     }
+                    .padding(.horizontal, 24)
                     
                     // MARK: - CONCIERGE QUICK ACCESS
                     Button(action: {}) {
-                        HStack {
+                        HStack(spacing: 10) {
                             Image(systemName: "message.fill")
                             Text("TALK TO PERSONAL STYLIST")
                                 .font(.system(size: 11, weight: .bold))
@@ -129,39 +136,63 @@ struct VestoAtelierView: View {
                         .cornerRadius(2)
                     }
                     .padding(.horizontal, 24)
-                    .padding(.bottom, 40)
+                    .padding(.top, 10)
+                    
+                    Spacer(minLength: 50)
                 }
             }
         }
     }
 }
 
-// MARK: - Atelier Card Component
-struct AtelierCard: View {
+// MARK: - Atelier Unified Card Component
+struct AtelierVaultCard<Content: View>: View {
     let icon: String
     let title: String
-    let value: String
+    let status: String
+    let content: Content
+    
+    init(icon: String, title: String, status: String, @ViewBuilder content: () -> Content) {
+        self.icon = icon
+        self.title = title
+        self.status = status
+        self.content = content()
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Image(systemName: icon)
-                .font(.system(size: 18, weight: .light))
-                .foregroundColor(.atelierGold)
-            
-            VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .center, spacing: 12) {
+            HStack {
+                Image(systemName: icon)
+                    .font(.system(size: 12))
+                    .foregroundColor(.atelierGold)
                 Text(title)
                     .font(.system(size: 9, weight: .bold))
+                    .tracking(1)
                     .foregroundColor(.white.opacity(0.4))
                 
-                Text(value)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.white)
+                Spacer()
+                
+                // Atelier xüsusi "Canlı Status" indikatoru
+                Text(status)
+                    .font(.system(size: 7, weight: .heavy))
+                    .foregroundColor(.atelierGold)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(Color.atelierGold.opacity(0.1))
+                    .cornerRadius(2)
             }
+            
+            content
+                .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
+        .frame(height: 100)
         .background(Color.white.opacity(0.02))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.05), lineWidth: 0.5))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.liquidGold, lineWidth: 0.3)
+        )
     }
 }
 

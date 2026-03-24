@@ -1,13 +1,11 @@
-//
 //  attellierPro.swift
 //  vestoAi for design
 //
-//  Created by Kenan on 24.03.26.
+//  Created by Kanan on 24.03.26.
 //
 
 import SwiftUI
 
-// Rəng palitrası və köməkçi funksiyalar (Xəta verməməsi üçün təkrar qeyd olunub)
 extension Color {
     static let vObsidian = Color(red: 5/255, green: 5/255, blue: 5/255)
     static let vGold = Color(red: 212/255, green: 175/255, blue: 55/255)
@@ -25,7 +23,6 @@ struct VestoProProfileView: View {
         ZStack {
             Color.vObsidian.ignoresSafeArea()
             
-            // Arxa fonda incə qızılı parıltı (Aura)
             RadialGradient(gradient: Gradient(colors: [Color.vGold.opacity(0.05), Color.clear]), center: .top, startRadius: 0, endRadius: 500)
                 .ignoresSafeArea()
             
@@ -38,7 +35,7 @@ struct VestoProProfileView: View {
                             Circle()
                                 .stroke(Color.vGold.opacity(0.3), lineWidth: 1)
                                 .frame(width: 72, height: 72)
-                            Text("JV") // Kanan üçün
+                            Text("JV")
                                 .font(.system(size: 22, weight: .light, design: .serif))
                                 .foregroundColor(.vGold)
                         }
@@ -48,7 +45,6 @@ struct VestoProProfileView: View {
                                 .font(.system(size: 20, weight: .medium, design: .serif))
                                 .foregroundColor(.white)
                             
-                            // "Pro Member" statusu qızılı rəngdə
                             Text("PRO MEMBER")
                                 .font(.system(size: 9, weight: .bold))
                                 .tracking(2)
@@ -57,7 +53,7 @@ struct VestoProProfileView: View {
                         
                         Spacer()
                         
-                        Image(systemName: "crown.fill") // Pro nişanı
+                        Image(systemName: "crown.fill")
                             .font(.system(size: 14))
                             .foregroundColor(.vGold)
                             .padding(.top, -20)
@@ -65,10 +61,9 @@ struct VestoProProfileView: View {
                     .padding(.horizontal, 24)
                     .padding(.top, 20)
                     
-                    // MARK: - 2. THE MASTER GAUGE (Fully Unlocked)
+                    // MARK: - 2. THE MASTER GAUGE
                     VStack(spacing: 12) {
                         ZStack {
-                            // Tam qızılı dairə
                             Circle()
                                 .stroke(Color.vGold.opacity(0.1), lineWidth: 1)
                                 .frame(width: 210, height: 210)
@@ -81,7 +76,7 @@ struct VestoProProfileView: View {
                                 .shadow(color: Color.vGold.opacity(0.3), radius: 10)
                             
                             VStack(spacing: -5) {
-                                Text("84") // Daha yüksək Pro xal
+                                Text("84")
                                     .font(.system(size: 84, weight: .ultraLight, design: .serif))
                                     .foregroundColor(.white)
                                 
@@ -93,10 +88,8 @@ struct VestoProProfileView: View {
                         }
                     }
                     
-                    // MARK: - 3. THE UNLOCKED GRID (Full Data)
+                    // MARK: - 3. THE UNLOCKED GRID
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        
-                        // Card 1: Full Color DNA
                         ProVaultCard(icon: "paintpalette.fill", title: "COLOR DNA") {
                             HStack(spacing: 6) {
                                 Circle().fill(Color.black).frame(width: 14, height: 14)
@@ -106,21 +99,18 @@ struct VestoProProfileView: View {
                             }
                         }
                         
-                        // Card 2: Signature Style
                         ProVaultCard(icon: "tshirt.fill", title: "SIGNATURE") {
                             Text("OLD MONEY LUXE")
                                 .font(.system(size: 9, weight: .bold))
                                 .foregroundColor(.white)
                         }
                         
-                        // Card 3: Synergy Engine (Active)
                         ProVaultCard(icon: "bolt.shield.fill", title: "SYNERGY") {
                             Text("OPTIMIZED")
                                 .font(.system(size: 9, weight: .bold))
                                 .foregroundColor(Color.green.opacity(0.8))
                         }
                         
-                        // Card 4: Occasion Logic
                         ProVaultCard(icon: "calendar.badge.checkmark", title: "READY") {
                             Text("92% MATCH")
                                 .font(.system(size: 9, weight: .bold))
@@ -148,6 +138,28 @@ struct VestoProProfileView: View {
                     }
                     .padding(.horizontal, 24)
                     
+                    // MARK: - 5. UPGRADE TO ATELIER (NEW)
+                    Button(action: {}) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.vGold)
+                            Text("UPGRADE TO VESTO ATELIER")
+                                .font(.system(size: 10, weight: .bold))
+                                .tracking(1.5)
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(Color.white.opacity(0.02))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.vGold.opacity(0.4), lineWidth: 1)
+                        )
+                        .cornerRadius(4)
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 10)
+                    
                     Spacer(minLength: 50)
                 }
             }
@@ -155,7 +167,7 @@ struct VestoProProfileView: View {
     }
 }
 
-// MARK: - Pro Card Component
+// Pro Card Component
 struct ProVaultCard<Content: View>: View {
     let icon: String
     let title: String
