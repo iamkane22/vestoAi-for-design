@@ -1,8 +1,13 @@
 import SwiftUI
+import PhotosUI
 
 struct VestoScannerView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var scanLineOffset: CGFloat = -180
     @State private var isDetecting = false
+    @State private var selectedPhotoItem: PhotosPickerItem? = nil
+    
+    let vestoGold = Color(red: 0.83, green: 0.69, blue: 0.22)
     
     var body: some View {
         ZStack {
@@ -11,22 +16,35 @@ struct VestoScannerView: View {
                 .fill(Color.black)
                 .edgesIgnoringSafeArea(.all)
                 .overlay(
-                    Image(systemName: "tshirt") // Kamerada görünən obyekt simvolu
+                    Image(systemName: "tshirt")
                         .font(.system(size: 150, weight: .ultraLight))
                         .foregroundColor(.white.opacity(0.1))
                 )
             
-            // 2. THE SCANNING FRAME & LASER
+            // 2. TOP BAR (X Düyməsi)
+            VStack {
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 24, weight: .light))
+                            .foregroundColor(.white)
+                            .padding(20)
+                    }
+                    Spacer()
+                }
+                Spacer()
+            }
+            .zIndex(2)
+            
+            // 3. SCANNING FRAME & LASER
             ZStack {
-                // Focus Frame
                 RoundedRectangle(cornerRadius: 2)
-                    .stroke(Color.vestoGold.opacity(0.3), lineWidth: 1)
+                    .stroke(vestoGold.opacity(0.3), lineWidth: 1)
                     .frame(width: 300, height: 450)
                 
-                // Animated Laser Line
                 Rectangle()
                     .fill(
-                        LinearGradient(colors: [.clear, .vestoGold, .clear], startPoint: .top, endPoint: .bottom)
+                        LinearGradient(colors: [.clear, vestoGold, .clear], startPoint: .top, endPoint: .bottom)
                     )
                     .frame(width: 300, height: 2)
                     .offset(y: scanLineOffset)
@@ -37,39 +55,45 @@ struct VestoScannerView: View {
                     }
             }
             
-            // 3. AI DETECTION OVERLAYS (Floating Labels)
+            // 4. BOTTOM CONTROLS
             VStack {
-                HStack {
-                    Capsule()
-                        .fill(Color.vestoGold)
-                        .frame(width: 80, height: 20)
-                        .overlay(Text("AI ACTIVE").font(.system(size: 8, weight: .bold)).foregroundColor(.black))
-                    Spacer()
-                }
-                .padding(.top, 60)
-                .padding(.horizontal, 40)
-                
                 Spacer()
                 
-                // AI "Düşünür" mesajları
                 VStack(spacing: 10) {
                     ScannerTag(text: "FABRIC: PREMIUM COTTON", delay: 0.5)
                     ScannerTag(text: "CUT: MINIMALIST SLIM", delay: 1.0)
-                    ScannerTag(text: "SHADE: OBSIDIAN BLACK", delay: 1.5)
                 }
-                .padding(.bottom, 40)
+                .padding(.bottom, 30)
                 
-                // THE SHUTTER
-                Button(action: {
-                    // Capture Logic
-                }) {
-                    ZStack {
-                        Circle()
-                            .stroke(Color.white, lineWidth: 2)
-                            .frame(width: 75, height: 75)
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 60, height: 60)
+                HStack(spacing: 40) {
+                    // QALEREYA DÜYMƏSİ
+                    PhotosPicker(selection: $selectedPhotoItem, matching: .images, photoLibrary: .shared()) {
+                        Image(systemName: "photo.on.rectangle")
+                            .font(.system(size: 24, weight: .light))
+                            .foregroundColor(.white)
+                    }
+                    
+                    // ÇƏKMƏK DÜYMƏSİ
+                    Button(action: {
+                        // Capture Logic
+                    }) {
+                        ZStack {
+                            Circle()
+                                .stroke(Color.white, lineWidth: 2)
+                                .frame(width: 75, height: 75)
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 60, height: 60)
+                        }
+                    }
+                    
+                    // FLASH DÜYMƏSİ
+                    Button(action: {
+                        // Flash Logic
+                    }) {
+                        Image(systemName: "bolt")
+                            .font(.system(size: 24, weight: .light))
+                            .foregroundColor(.white)
                     }
                 }
                 .padding(.bottom, 50)
@@ -78,7 +102,8 @@ struct VestoScannerView: View {
     }
 }
 
-// Kiçik AI məlumat etiketləri
+// MARK: - Helper Components (Xətanı həll edən hissə)
+
 struct ScannerTag: View {
     let text: String
     let delay: Double
@@ -99,7 +124,6 @@ struct ScannerTag: View {
     }
 }
 
-// Glassmorphism effekti üçün köməkçi
 struct BlurView: UIViewRepresentable {
     let style: UIBlurEffect.Style
     func makeUIView(context: Context) -> UIVisualEffectView { UIVisualEffectView(effect: UIBlurEffect(style: style)) }
